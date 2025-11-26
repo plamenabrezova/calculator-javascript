@@ -1,14 +1,40 @@
-import * as utils from "./utils.js";
+const NUM_KEYS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const OPERATORS_KEYS = ["+", "-", "*", "/"];
+const EQUAL_KEYS = ["=", "Enter"];
+const MAX_DIGIT_COUNT = 8;
 
-let upperLine = document.querySelector(".upper-line");
-let lowerLine = document.querySelector(".lower-line");
+const performMathOperation = (firstNumber, secondNumber, operator) => {
+  switch (operator) {
+    case "+":
+      return firstNumber + secondNumber;
 
-// initial calculator values
-let firstNumber = parseFloat(lowerLine.innerText);
+    case "-":
+      return firstNumber - secondNumber;
+
+    case "*":
+      return firstNumber * secondNumber;
+
+    case "/":
+      if (secondNumber === 0) {
+        return "Cannot divide by zero";
+      }
+      return firstNumber / secondNumber;
+  }
+};
+
+let upperLine;
+let lowerLine
+
+let firstNumber;
 let secondNumber;
 let operator = "";
 
 const initApp = () => {
+  // initial calculator values
+  upperLine = document.querySelector(".upper-line");
+  lowerLine = document.querySelector(".lower-line");
+  firstNumber = parseFloat(lowerLine.innerText);
+
   handleKeyDownActions();
   handleDigitClick();
   handleOperatorClick();
@@ -22,11 +48,11 @@ const initApp = () => {
 
 const handleKeyDownActions = () => {
   document.addEventListener("keydown", (event) => {
-    if (utils.NUM_KEYS.includes(event.key)) {
+    if (NUM_KEYS.includes(event.key)) {
       selectDigit(event.key);
-    } else if (utils.OPERATORS_KEYS.includes(event.key)) {
+    } else if (OPERATORS_KEYS.includes(event.key)) {
       selectOperator(event.key);
-    } else if (utils.EQUAL_KEYS.includes(event.key)) {
+    } else if (EQUAL_KEYS.includes(event.key)) {
       performEqualCalculation();
     }
   });
@@ -51,7 +77,7 @@ const selectDigit = (digitSelected) => {
       upperLine.innerText = "";
     }
   } else {
-    if (lowerLine.innerText.length < utils.MAX_DIGIT_COUNT) {
+    if (lowerLine.innerText.length < MAX_DIGIT_COUNT) {
         lowerLine.innerText += digitSelected;
     }
     
@@ -78,7 +104,7 @@ const selectOperator = (operatorSelected) => {
       firstNumber !== parseFloat(lowerLine.innerText)
     ) {
       secondNumber = parseFloat(lowerLine.innerText);
-      firstNumber = utils.performMathOperation(
+      firstNumber = performMathOperation(
         firstNumber,
         secondNumber,
         operator
@@ -112,7 +138,7 @@ const performEqualCalculation = () => {
       secondNumber = parseFloat(lowerLine.innerText);
     }
 
-    lowerLine.innerText = utils.performMathOperation(
+    lowerLine.innerText = performMathOperation(
       firstNumber,
       secondNumber,
       operator
